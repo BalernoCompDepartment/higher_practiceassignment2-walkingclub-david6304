@@ -1,0 +1,77 @@
+#I couldn't do it in java so I did it in python 
+
+from collections import namedtuple
+
+#Create record structure for members
+Member = namedtuple('Member', 'forename surname distance')
+
+
+#Module to read data from file and store it in an array of records
+def readData():
+
+    #Open file and split the data into an array
+    file = open('members.txt','r')
+    data = file.read()
+    lines = data.split('\n')
+
+    #Initialize the array
+    memberArray = [Member("","",0.0)]*len(lines)
+
+    #Fixed loop to store the info from the lines array into records and store them in the array of records
+    for counter in range(len(lines)):
+        info = lines[counter].split(',')
+        newMember = Member(info[0], info[1], float(info[2]))
+        memberArray[counter] = newMember
+
+    file.close()
+    return memberArray
+
+
+#Module to find the furthest distance walked
+def findFurthest(memberArray):
+    #Initialize furthest so the members distances can be compared to it
+    furthest = memberArray[0].distance
+
+    #Fixed loop to compare each members distance to the current furthest and update furthest if it's greater
+    for counter in range(len(memberArray)-1):
+        if memberArray[counter+1].distance > furthest:
+            furthest = memberArray[counter+1].distance
+    return furthest
+
+
+#Module to display the furthest distance
+def displayFurthest(furthest):
+    print('The furthest distance walked was '+str(furthest)+' miles!')
+
+
+#Module to write club prize winners to file
+def writeWinners(membersArray, furthest):
+    #Open file
+    file = open('results.txt','w')
+
+    #Write initial statement to file
+    file.write('The prize winning member are: ')
+
+    #Close and reopen file in append mode so initial statement is not overwritten
+    file.close()
+    file = open('results.txt','a')
+
+    #Fixed loop to write the members full names to the file if they walked more than 70% of the furthest
+    for counter in range(len(membersArray)):
+        if membersArray[counter].distance > 0.7*furthest:
+            file.write('\n'+membersArray[counter].forename+' '+membersArray[counter].surname)
+
+    #Fixed loop to write the number of whole marathons walked by each member
+    file.write('\n\nThe number of whole marathons walked by each member is: ')
+    for counter in range(len(membersArray)):
+        noOfMarathons = int(membersArray[counter].distance / 26.22)
+        file.write('\n'+membersArray[counter].forename+' '+membersArray[counter].surname+' '+str(noOfMarathons))
+    file.close()
+
+
+#Main Program
+
+ArrayofMembers = readData()
+furthestDistance = findFurthest(ArrayofMembers)
+displayFurthest(furthestDistance)
+writeWinners(ArrayofMembers, furthestDistance)

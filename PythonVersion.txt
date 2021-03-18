@@ -1,4 +1,4 @@
-#I couldn't do it in java so I did it in python 
+#Here is a working version I made in python since I couldn't do it in java
 
 from collections import namedtuple
 

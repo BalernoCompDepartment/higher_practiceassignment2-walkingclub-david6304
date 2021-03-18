@@ -8,7 +8,7 @@ class Main {
   }
 //Module to read data from file and store it in an array of records
   public static Member[] readData() {
-
+    
   }
 }
 
